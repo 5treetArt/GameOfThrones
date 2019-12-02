@@ -33,7 +33,7 @@ object RootRepository {
      * @param result - колбек содержащий в себе список данных о доме и персонажей в нем (Дом - Список Персонажей в нем)
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun getNeedHouseWithCharters(vararg houseNames: String, result : (houses : List<Pair<HouseRes, List<CharacterRes>>>) -> Unit) {
+    fun getNeedHouseWithCharacters(vararg houseNames: String, result : (houses : List<Pair<HouseRes, List<CharacterRes>>>) -> Unit) {
         //TODO implement me
     }
 
