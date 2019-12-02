@@ -5,7 +5,6 @@
     <color name="color_gray_dark">#4c4c4c</color>
     <color name="color_gray">#8D8C8C</color>
     <color name="color_gray_light">#dedede</color>
-    <color name="ic_launcher_background">@android:color/transparent</color>
 
 
     <color name="stark_primary">#414141</color>
