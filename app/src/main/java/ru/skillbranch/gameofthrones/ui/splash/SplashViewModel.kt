@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class SplashViewModel  : ViewModel() {
     fun setDataLoaded() {
-        isLoaded.value = true
+        isLoaded.postValue(true)
     }
 
     private val isLoaded = MutableLiveData<Boolean>()
