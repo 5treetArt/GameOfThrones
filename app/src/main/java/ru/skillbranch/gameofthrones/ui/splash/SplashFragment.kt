@@ -49,11 +49,11 @@ class SplashFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_splash, container, false)
-        (root.findViewById(R.id.iv_splash) as ImageView).setImageBitmap(Utils.scaleBitmapToMaxSize(resources, R.drawable.splash, activity!!.windowManager))
+        //(root.findViewById(R.id.iv_splash) as ImageView).setImageBitmap(Utils.scaleBitmapToMaxSize(resources, R.drawable.splash, activity!!.windowManager))
         countDownTimer.start()
         splashViewModel.loaded.observe(this, Observer<Boolean> {
             if (countDownTimer.isAlive) lock.withLock { condition.await() }
-            fragmentManager!!.beginTransaction().replace(R.id.root_content, MainFragment()).commit()
+            fragmentManager!!.beginTransaction().replace(R.id.root_container, MainFragment()).commit()
         })
         return root
     }
