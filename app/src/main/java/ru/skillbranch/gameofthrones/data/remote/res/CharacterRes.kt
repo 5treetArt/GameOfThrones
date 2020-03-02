@@ -1,5 +1,9 @@
 package ru.skillbranch.gameofthrones.data.remote.res
 
+import com.squareup.moshi.JsonClass
+import ru.skillbranch.gameofthrones.data.local.entities.Character
+
+@JsonClass(generateAdapter = true)
 data class CharacterRes(
     val url: String,
     val name: String,
@@ -17,6 +21,27 @@ data class CharacterRes(
     val povBooks: List<Any> = listOf(),
     val tvSeries: List<String> = listOf(),
     val playedBy: List<String> = listOf()
+
+
 ){
-    var houseId: String = ""
+    var houseId: String = "Stark"
+
+
+    fun toCharacter(id: String, motherId: String, fatherId: String, spouseId: String): Character{
+        return Character(
+            id = id,
+            houseId = this.houseId,
+            mother = motherId,
+            father = fatherId,
+            spouse = spouseId,
+            aliases = this.aliases,
+            born = this.born,
+            culture = this.culture,
+            died = this.died,
+            gender = this.gender,
+            name = this.name,
+            titles = this.titles
+
+        )
+    }
 }
