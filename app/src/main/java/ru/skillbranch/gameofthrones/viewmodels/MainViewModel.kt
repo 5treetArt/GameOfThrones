@@ -9,41 +9,38 @@ import ru.skillbranch.gameofthrones.repositories.RootRepository
 class MainViewModel : ViewModel() {
 
     private val query = mutableLiveData("")
-    val charactersItemsLiveData = MutableLiveData<List<CharacterItem>>()
-    val characterFullLiveData = MutableLiveData<CharacterFull>()
-    val housesLiveData = MutableLiveData<List<House>>()
-
+    private val charactersItems = MutableLiveData<List<CharacterItem>>()
+    private val characterFull = MutableLiveData<CharacterFull>()
+    private val houses = MutableLiveData<List<House>>()
 
     fun getCharacterItems(): LiveData<List<CharacterItem>> {
         val result = MediatorLiveData<List<CharacterItem>>()
         val filterF = {
             val queryString = query.value!!
-            result.value = if (queryString.isEmpty()) charactersItemsLiveData.value
-            else charactersItemsLiveData.value?.filter { it.name.contains(queryString, true) }
+            result.value = if (queryString.isEmpty()) charactersItems.value
+            else charactersItems.value?.filter { it.name.contains(queryString, true) }
         }
-        result.addSource(charactersItemsLiveData) { filterF.invoke() }
+        result.addSource(charactersItems) { filterF.invoke() }
         result.addSource(query) { filterF.invoke() }
 
         return result
     }
 
-
-    fun getCharactersByHouseName(name: String) {
+    fun updateCharactersByHouseName(name: String) {
         RootRepository.findCharactersByHouseName(name) {
-            charactersItemsLiveData.postValue(it)
+            charactersItems.postValue(it)
         }
     }
 
-
-    fun getCharacterFullById(id: String) {
+    fun updateCharacterFullById(id: String) {
         RootRepository.findCharacterFullById(id) {
-            characterFullLiveData.postValue(it)
+            characterFull.postValue(it)
         }
     }
 
-    fun getHouses() {
+    fun updateHouses() {
         RootRepository.getHouses {
-            housesLiveData.postValue(it)
+            houses.postValue(it)
         }
     }
 
@@ -51,8 +48,11 @@ class MainViewModel : ViewModel() {
         query.value = text
     }
 
+    fun getHouses(): LiveData<List<House>> = houses
 
-    fun <T> mutableLiveData(defaultValue: T? = null): MutableLiveData<T> {
+    fun getCharacter(): LiveData<CharacterFull> = characterFull
+
+    private fun <T> mutableLiveData(defaultValue: T? = null): MutableLiveData<T> {
         val data = MutableLiveData<T>()
         if (defaultValue != null) {
             data.value = defaultValue

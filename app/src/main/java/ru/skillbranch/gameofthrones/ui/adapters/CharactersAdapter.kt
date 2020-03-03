@@ -11,26 +11,21 @@ import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 
 class CharactersAdapter(private val listener: (CharacterItem) -> Unit) :
-    RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
+    RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
 
-    var items: List<CharacterItem> = listOf()
+    var items: List<CharacterItem> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
+    ): CharacterViewHolder {
+        val view = LayoutInflater
+            .from(parent.context)
             .inflate(R.layout.character_item, parent, false)
-        return ViewHolder(view)
+        return CharacterViewHolder(view)
     }
 
-
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
-        holder.bind(items[position])
-    }
+    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) = holder.bind(items[position])
 
     override fun getItemId(position: Int): Long {
         return items[position].id.toLong()
@@ -55,12 +50,9 @@ class CharactersAdapter(private val listener: (CharacterItem) -> Unit) :
         diffResult.dispatchUpdatesTo(this)
     }
 
+    override fun getItemCount(): Int =  items.size
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    inner class ViewHolder internal constructor(val view: View) :
+    inner class CharacterViewHolder internal constructor(val view: View) :
         RecyclerView.ViewHolder(view) {
         fun bind(characterItem: CharacterItem) {
             val noInfoString = view.context.resources.getString(R.string.info_is_not_available)

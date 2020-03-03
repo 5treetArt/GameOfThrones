@@ -16,7 +16,7 @@ import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.data.local.LoadResult
 import ru.skillbranch.gameofthrones.repositories.RootRepository
 
-class SplashViewModel(private val app: App) : AndroidViewModel(app) {
+class SplashViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val repository = RootRepository
 
@@ -39,7 +39,6 @@ class SplashViewModel(private val app: App) : AndroidViewModel(app) {
             delay(5000)
             loadResult.postValue(LoadResult.Success(true))
         }
-
     }
 
     private fun isOnline(context: Context): Boolean {

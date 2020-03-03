@@ -14,10 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".ui.screens.CharacterScreen"
+            android:name=".ui.screens.CharacterActivity"
             android:label="@string/title_activity_character_screen"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"/>
-        <activity android:name=".ui.screens.CharactersListScreen" />
+        <activity android:name=".ui.screens.HousesActivity" />
         <activity android:name=".ui.screens.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

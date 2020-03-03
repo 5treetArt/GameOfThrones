@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -46,7 +45,7 @@ class SplashActivity : AppCompatActivity() {
                 }
                 is LoadResult.Success -> {
                     //TODO check 5 seconds
-                    val intent = Intent(this, CharactersListScreen::class.java)
+                    val intent = Intent(this, HousesActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
@@ -74,7 +73,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     //private fun showCharactersListScreen() {
-    //    val intent = Intent(this, CharactersListScreen::class.java)
+    //    val intent = Intent(this, HousesActivity::class.java)
     //    startActivity(intent)
     //    finish()
     //}

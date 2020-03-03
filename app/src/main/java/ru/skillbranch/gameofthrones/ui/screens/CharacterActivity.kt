@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character_screen.*
 import kotlinx.android.synthetic.main.content_character_screen.*
@@ -15,7 +15,7 @@ import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterFull
 import ru.skillbranch.gameofthrones.viewmodels.MainViewModel
 
-class CharacterScreen : AppCompatActivity() {
+class CharacterActivity : AppCompatActivity() {
 
     private var characterId: String? = null
     private lateinit var characterViewModel: MainViewModel
@@ -41,12 +41,9 @@ class CharacterScreen : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        characterViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        characterViewModel.characterFullLiveData.observe(this, Observer {
-            setUI(it)
-
-        })
-        characterViewModel.getCharacterFullById(characterId!!)
+        characterViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        characterViewModel.getCharacter().observe(this, Observer { setUI(it) })
+        characterViewModel.updateCharacterFullById(characterId!!)
 
     }
 
@@ -72,7 +69,7 @@ class CharacterScreen : AppCompatActivity() {
         ic_aliases.setColorFilter(iconColor)
         if(character.father != null) {
             btn_father.setBackgroundColor(AppConfig.getColorByHouseName(character.father.house))
-            btn_father.setText(character.father.name)
+            btn_father.text = character.father.name
             ic_father.setColorFilter(iconColor)
             btn_father.setOnClickListener { showParent(character.father.id) }
         } else {
@@ -82,7 +79,7 @@ class CharacterScreen : AppCompatActivity() {
         }
         if(character.mother != null) {
             btn_mother.setBackgroundColor(AppConfig.getColorByHouseName(character.mother.house))
-            btn_mother.setText(character.mother.name)
+            btn_mother.text = character.mother.name
             ic_mother.setColorFilter(iconColor)
             btn_mother.setOnClickListener { showParent(character.mother.id) }
         } else {
@@ -103,7 +100,7 @@ class CharacterScreen : AppCompatActivity() {
     }
 
     private fun showParent(id: String) {
-        val intent = Intent(this, CharacterScreen::class.java )
+        val intent = Intent(this, CharacterActivity::class.java )
         intent.putExtra(HouseFragment.ARG_CHARACTER_ID, id)
         startActivity(intent)
     }

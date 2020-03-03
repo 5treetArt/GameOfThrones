@@ -11,6 +11,10 @@ import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 import ru.skillbranch.gameofthrones.data.local.entities.House
 import ru.skillbranch.gameofthrones.data.remote.res.CharacterRes
 import ru.skillbranch.gameofthrones.data.remote.res.HouseRes
+import java.lang.Thread.sleep
+import java.util.concurrent.locks.Condition
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.coroutines.CoroutineContext
 
 object RootRepository {
@@ -176,7 +180,6 @@ object RootRepository {
                     motherId = characterRes.mother.split("/").last(),
                     fatherId = characterRes.father.split("/").last(),
                     spouseId = characterRes.spouse.split("/").last()
-
                 )
             }
             db.gameOfThronesDAO().insertCharacters(characters)
@@ -279,19 +282,30 @@ object RootRepository {
     }
 
     fun sync() {
-        //TODO 11:06
-        getNeedHouseWithCharacters(
-            *AppConfig.NEED_HOUSES
-        ) {
-            insertHouses(it.map { pair -> pair.first }) {
+        var isHousesReady = false
+        var isCharactersReady = false
+        val lock = ReentrantLock()
+        val housesCondition = lock.newCondition()
+        val charactersCondition = lock.newCondition()
+
+        val timer = Thread { sleep(5000L) }.apply { start() }
+
+        getNeedHouseWithCharacters(*AppConfig.NEED_HOUSES) { housesAndCharacters ->
+            insertHouses(housesAndCharacters.map { it.first }) {
                 isHousesReady = true
+                housesCondition.signal()
             }
-            for (pair in it) {
-                insertCharacters(pair.second) {
-                    isCharactersReady = true
-                }
+            insertCharacters(housesAndCharacters.flatMap { it.second }) {
+                isCharactersReady = true
+                charactersCondition.signal()
             }
         }
-    }
 
+        lock.withLock {
+            if (!isHousesReady) housesCondition.await()
+            if (!isCharactersReady) charactersCondition.await()
+        }
+
+        timer.join()
+    }
 }

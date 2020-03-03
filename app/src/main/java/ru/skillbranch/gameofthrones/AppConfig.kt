@@ -27,7 +27,7 @@ object AppConfig {
            "Baratheon" -> ContextCompat.getColor(context, R.color.baratheon_primary)
            "Greyjoy" -> ContextCompat.getColor(context, R.color.greyjoy_primary)
            "Martell" -> ContextCompat.getColor(context, R.color.martel_primary)
-           else  -> ContextCompat.getColor(context, R.color.tyrel_primary)
+           else  -> ContextCompat.getColor(context, R.color.tyrell_primary)
         }
     }
 

@@ -7,7 +7,8 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_house.*
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.viewmodels.MainViewModel
@@ -16,7 +17,6 @@ import ru.skillbranch.gameofthrones.ui.custom.SimpleItemDecorator
 
 
 class HouseFragment : Fragment() {
-
 
     lateinit var houseName: String
     private lateinit var houseViewModel: MainViewModel
@@ -29,7 +29,7 @@ class HouseFragment : Fragment() {
             val args = Bundle()
             args.putString(ARG_HOUSE_NAME, name)
             val fragment = HouseFragment()
-            fragment.setArguments(args)
+            fragment.arguments = args
             return fragment
         }
     }
@@ -52,19 +52,16 @@ class HouseFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
         val searchView = (menu.findItem(R.id.action_search))?.actionView as SearchView
-        searchView.queryHint = "Введите имя пользователя"
+        searchView.queryHint = "Search character"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 houseViewModel.handleSearchQuery(query)
                 return true
-
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 houseViewModel.handleSearchQuery(newText)
                 return true
-
-
             }
 
         })
@@ -72,34 +69,29 @@ class HouseFragment : Fragment() {
     }
 
     private fun initViews() {
-        val simpleItemDecorator =
-            SimpleItemDecorator(context!!)
-        charactersAdapter =
-            CharactersAdapter() {
-                showCharacterDetailScreen(it.id)
-            }
+        charactersAdapter = CharactersAdapter { showCharacterDetailScreen(it.id) }
         with(rv_characters) {
             adapter = charactersAdapter
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            addItemDecoration(simpleItemDecorator)
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(SimpleItemDecorator(context))
         }
     }
 
     private fun showCharacterDetailScreen(id: String) {
-        val intent = Intent(context, CharacterScreen::class.java)
+        val intent = Intent(context, CharacterActivity::class.java)
         intent.putExtra(ARG_CHARACTER_ID, id)
         startActivity(intent)
     }
 
     private fun initViewModel() {
-        houseViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        houseViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         houseViewModel.getCharacterItems().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 charactersAdapter.updateData(it)
             }
 
         })
-        houseViewModel.getCharactersByHouseName(houseName)
+        houseViewModel.updateCharactersByHouseName(houseName)
 
     }
 
